@@ -1,0 +1,10 @@
+C:\src\aleksnweb\WebServer\bin\Debug\netcoreapp2.1\WebServer.deps.json
+C:\src\aleksnweb\WebServer\bin\Debug\netcoreapp2.1\WebServer.runtimeconfig.json
+C:\src\aleksnweb\WebServer\bin\Debug\netcoreapp2.1\WebServer.runtimeconfig.dev.json
+C:\src\aleksnweb\WebServer\bin\Debug\netcoreapp2.1\WebServer.dll
+C:\src\aleksnweb\WebServer\obj\Debug\netcoreapp2.1\WebServer.fsprojAssemblyReference.cache
+C:\src\aleksnweb\WebServer\obj\Debug\netcoreapp2.1\WebServer.AssemblyInfoInputs.cache
+C:\src\aleksnweb\WebServer\obj\Debug\netcoreapp2.1\WebServer.AssemblyInfo.fs
+C:\src\aleksnweb\WebServer\bin\Debug\netcoreapp2.1\WebServer.pdb
+C:\src\aleksnweb\WebServer\obj\Debug\netcoreapp2.1\WebServer.dll
+C:\src\aleksnweb\WebServer\obj\Debug\netcoreapp2.1\WebServer.pdb
