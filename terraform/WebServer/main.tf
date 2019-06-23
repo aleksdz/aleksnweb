@@ -5,7 +5,6 @@ provider "aws" {
 }
 
 resource "aws_vpc" "web_srv_vpc" {
-    
     cidr_block           = "10.0.0.0/16"
     enable_dns_hostnames = "true"
 
@@ -101,6 +100,23 @@ resource "aws_key_pair" "home_key" {
     public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDhDZIk0ZGOtC6SOBo9W7OrNK6ASdxEZ0iEkcyF+Wa7SY40Bv+FDQcl6dxLmH8q3CiAPFCY+bTSvM/5LrmaiOO/dVbKOCKEGBrrnGC7CmJv3lgpfOMr9M5OfcvoXFMKjU2dE6Dl733sP+JXrwR9Np2lOU2gJYGdT0JMOVb/mg0XvFdqeqSX9dZvdXi8YvsiZfwBi5ZfRWGjakG0eteImAVDwph/pRA4E78Wc/NkYEIXOL5N1kMIrzO7Tq8ZdK5NpULQTq7PzCkgUiDvuN7aiOOkE+ZRzP4zkokhoAihUnqqDbCBr1hmSJ0xP55ULxS8Aya7/AzQn1fwxZFSGlrsGo3j zaers@soulkeeper"
 }
 
+resource "aws_iam_instance_profile" "ec_inst_prf" {
+    name = "ec2-instance-profile"
+    role = "${aws_iam_role.ec_iam_role.name}"
+}
+
+resource "aws_iam_role" "ec_iam_role" {
+    name = "ec-iam-role"
+    assume_role_policy = "${file("ec_iam_plc.json")}"
+}
+
+resource "aws_iam_role_policy" "ec_role_plc" {
+  name = "test_policy"
+  role = "${aws_iam_role.ec_iam_role.id}"
+
+  policy = "${file("ec_role_plc.json")}"
+}
+
 resource "aws_instance" "web_server" {
     ami                         = "ami-01b282b0f06ba5fd2"
     instance_type               = "t2.micro"
@@ -109,6 +125,7 @@ resource "aws_instance" "web_server" {
     associate_public_ip_address = "true"
     user_data                   = "${file("instance_bootstrap.sh")}"
     vpc_security_group_ids      = [aws_security_group.web_srv_sg.id]
+    iam_instance_profile        = aws_iam_instance_profile.ec_inst_prf.id
 
     tags = {
         Name = "web-srv-inst"
