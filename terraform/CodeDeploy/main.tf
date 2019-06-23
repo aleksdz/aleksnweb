@@ -13,10 +13,6 @@ resource "aws_iam_user" "cd_iam_usr" {
     }
 }
 
-resource "aws_iam_access_key" "cd_iam_acs_key" {
-    user = "${aws_iam_user.cd_iam_usr.name}"
-}
-
 resource "aws_iam_role" "cd_iam_svc_role" {
     name = "iam-cd-service-role"
     assume_role_policy = "${file("cd_iam_svc_plc.json")}"
