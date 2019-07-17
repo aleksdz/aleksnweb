@@ -1,7 +1,20 @@
 ﻿module WebServer =
     open System
+    open System.IO
     open Suave
-    
+    open Suave.Operators
+
+    let app = 
+        choose 
+            [
+                Filters.GET >=> choose
+                    [
+                        Filters.path "/" >=> (Successful.OK "My main Page")
+                        Files.browseHome
+                        RequestErrors.NOT_FOUND "Page not found." 
+                    ]
+            ]
+
     let webBindings = 
         [
             HttpBinding.createSimple HTTP "0.0.0.0" 80
@@ -13,7 +26,8 @@
         startWebServer 
             {
                 defaultConfig with
-                    bindings = webBindings                
+                    bindings = webBindings   
+                    homeFolder = Some (Path.GetFullPath "../../../Views")
             }
-            (Successful.OK "Hello World!")
+            app
         0
