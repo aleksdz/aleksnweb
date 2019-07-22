@@ -15,12 +15,16 @@ apt-get --yes install dotnet-sdk-2.2
 apt-get --yes install git
 apt-get --yes install sysv-rc
 
+# CodeDeploy Agent
+apt-get --yes install ruby
+apt-get --yes install wget
+wget https://aws-codedeploy-eu-west-1.s3.eu-west-1.amazonaws.com/latest/install
+chmod +x ./install
+sudo ./install auto
+sudo service codedeploy-agent start
+
 # Open Internet Ports for External Connectivity
 iptables -A INPUT -p tcp --dport 80 --jump ACCEPT
 iptables -A INPUT -p tcp --dport 443 --jump ACCEPT
 iptables-save
 
-echo "git clone https://github.com/zaersx/aleksnweb.git" >> /etc/init.d/web_server_start.sh
-echo "sudo dotnet run --project aleksnweb/WebServer/WebServer.fsproj" >> /etc/init.d/web_server_start.sh
-cmod +x /etc/init.d/web_server_start.sh
-sudo update-rc.d web_server_start.sh defaults
