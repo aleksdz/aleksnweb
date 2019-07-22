@@ -1,1 +1,1 @@
-dotnet run --project /var/aleksnweb/WebServer/WebServer.fsproj &
+dotnet run --project /var/aleksnweb/WebServer/WebServer.fsproj 2>&1 | logger &
