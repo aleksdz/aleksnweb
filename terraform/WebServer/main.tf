@@ -23,12 +23,23 @@ resource "aws_vpc" "web_srv_vpc" {
     }
 }
 
-resource "aws_subnet" "web_srv_sn" {
-    vpc_id     = aws_vpc.web_srv_vpc.id
-    cidr_block = "10.0.0.0/16"
+resource "aws_subnet" "web_srv_sn_1a" {
+    vpc_id              = aws_vpc.web_srv_vpc.id
+    cidr_block          = "10.0.0.0/18"
+    availability_zone   = "eu-west-1a"
 
     tags = {
-        Name = "web-srv-sn"
+        Name = "web-srv-sn-a"
+    }
+}
+
+resource "aws_subnet" "web_srv_sn_1b" {
+    vpc_id              = aws_vpc.web_srv_vpc.id
+    cidr_block          = "10.0.64.0/18"
+    availability_zone   = "eu-west-1b"
+
+    tags = {
+        Name = "web-srv-sn-b"
     }
 }
 
@@ -136,14 +147,54 @@ resource "aws_iam_policy" "av_role_plc" {
 resource "aws_instance" "web_server" {
     ami                         = "ami-01b282b0f06ba5fd2"
     instance_type               = "t2.micro"
-    subnet_id                   = aws_subnet.web_srv_sn.id
+    subnet_id                   = aws_subnet.web_srv_sn_1a.id
     key_name                    = "home-key"
     associate_public_ip_address = "true"
     user_data                   = "${file("instance_bootstrap.sh")}"
     vpc_security_group_ids      = [aws_security_group.web_srv_sg.id]
     iam_instance_profile        = aws_iam_instance_profile.ec_inst_prf.id
+    availability_zone           = "eu-west-1a"
 
     tags = {
         Name = "web-srv-inst"
     }
 }
+
+resource "aws_network_interface" "web_server_subnet_interface" {
+    subnet_id   = "${aws_subnet.web_srv_sn_1a.id}"
+    private_ips = ["10.0.0.10"]
+}
+
+resource "aws_eip" "web_server_ip" {
+  network_interface         = "${aws_network_interface.web_server_subnet_interface.id}"
+  associate_with_private_ip = "10.0.0.10"
+  vpc                       = true
+}
+
+resource "aws_alb" "web_server_lb" {
+    name                = "web-server-lb"
+    subnets             = ["${aws_subnet.web_srv_sn_1a.id}","${aws_subnet.web_srv_sn_1b.id}"]
+    load_balancer_type  = "application"
+}
+
+resource "aws_alb_target_group" "web_srv_tg" {
+    name            = "web-srv-lb-tg"
+    port            = 80
+    protocol        = "HTTP"
+    vpc_id          = "${aws_vpc.web_srv_vpc.id}"
+}
+
+
+resource "aws_alb_listener" "web_srv_lb_listener" {
+    load_balancer_arn   = "${aws_alb.web_server_lb.arn}"
+    port                = 443
+    protocol            = "HTTPS"
+    ssl_policy          = "ELBSecurityPolicy-2016-08"
+    certificate_arn     = "arn:aws:acm:eu-west-1:651390807906:certificate/b9776e07-05f3-47e3-a98c-5a701468ea29"
+
+    default_action {
+        type                = "forward"
+        target_group_arn    = "${aws_alb_target_group.web_srv_tg.arn}"
+    }
+}
+
