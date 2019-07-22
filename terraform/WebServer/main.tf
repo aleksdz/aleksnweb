@@ -4,6 +4,16 @@ provider "aws" {
     region = "eu-west-1"
 }
 
+resource "aws_s3_bucket" "av_bucket" {
+  bucket        = "anw-appveyor"
+  acl           = "private"
+  region        = "eu-west-1"
+
+  tags = {
+    Name        = "aleksnweb AppVeyor artifacts bucket"
+  }
+}
+
 resource "aws_vpc" "web_srv_vpc" {
     cidr_block           = "10.0.0.0/16"
     enable_dns_hostnames = "true"
@@ -111,10 +121,16 @@ resource "aws_iam_role" "ec_iam_role" {
 }
 
 resource "aws_iam_role_policy" "ec_role_plc" {
-  name = "test_policy"
+  name = "ec-role-plc"
   role = "${aws_iam_role.ec_iam_role.id}"
 
   policy = "${file("ec_role_plc.json")}"
+}
+
+resource "aws_iam_policy" "av_role_plc" {
+  name = "av-s3-plc"
+  
+  policy = "${file("av_role_plc.json")}"
 }
 
 resource "aws_instance" "web_server" {

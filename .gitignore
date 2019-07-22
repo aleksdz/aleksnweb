@@ -4,3 +4,4 @@
 *.exe
 *.dll
 .DS_Store
+*.terraform*
