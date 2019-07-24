@@ -1,0 +1,1 @@
+variable "web_server_lb_name" {}
