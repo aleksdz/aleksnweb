@@ -6,9 +6,9 @@ files:
 hooks:
   ApplicationStart:
     - location: scripts/appstart.sh
-      timeout: 30
+      timeout: 300
       runas: root
   ApplicationStop:
     - location: scripts/appstop.sh
-      timeout: 30
+      timeout: 300
       runas: root

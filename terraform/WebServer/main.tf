@@ -189,6 +189,11 @@ resource "aws_alb_target_group" "web_srv_tg" {
     vpc_id          = "${aws_vpc.web_srv_vpc.id}"
 }
 
+resource "aws_alb_target_group_attachment" "web_srv_tg_target" {
+  target_group_arn = "${aws_alb_target_group.web_srv_tg.arn}"
+  target_id        = "${aws_instance.web_server.id}"
+  port             = 80
+}
 
 resource "aws_alb_listener" "web_srv_lb_listener" {
     load_balancer_arn   = "${aws_alb.web_server_lb.arn}"
