@@ -1,1 +1,1 @@
-dotnet run --project /var/aleksnweb/WebServer/WebServer.fsproj 2>&1 | logger &
+dotnet run --project /var/aleksnweb/WebServer/WebServer.fsproj > >(logger -p user.info) 2> >(logger -p user.warn)

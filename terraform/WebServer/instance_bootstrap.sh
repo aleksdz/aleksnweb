@@ -14,6 +14,7 @@ apt-get update
 apt-get --yes install dotnet-sdk-2.2
 apt-get --yes install git
 apt-get --yes install sysv-rc
+apt-get --yes install logger
 
 # CodeDeploy Agent
 apt-get --yes install ruby
