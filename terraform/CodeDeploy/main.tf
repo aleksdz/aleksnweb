@@ -38,7 +38,7 @@ resource "aws_sns_topic" "web-srv-cd-sns" {
     name = "web-srv-sns-tpc"
 }
 
-resource "aws_codedeploy_deployment_group" "example" {
+resource "aws_codedeploy_deployment_group" "cd_deploy_grp" {
     app_name              = "${aws_codedeploy_app.cd_web_srv_app.name}"
     deployment_group_name = "web-srv-grp"
     service_role_arn      = "${aws_iam_role.cd_iam_svc_role.arn}"
@@ -65,5 +65,11 @@ resource "aws_codedeploy_deployment_group" "example" {
     alarm_configuration {
         alarms  = ["web-srv-deploy-alarm"]
         enabled = true
+    }
+
+    load_balancer_info {
+        elb_info {
+            name = var.web_server_lb_name
+        }   
     }
 }

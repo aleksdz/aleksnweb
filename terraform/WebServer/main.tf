@@ -149,7 +149,6 @@ resource "aws_instance" "web_server" {
     instance_type               = "t2.micro"
     subnet_id                   = aws_subnet.web_srv_sn_1a.id
     key_name                    = "home-key"
-    associate_public_ip_address = "true"
     user_data                   = "${file("instance_bootstrap.sh")}"
     vpc_security_group_ids      = [aws_security_group.web_srv_sg.id]
     iam_instance_profile        = aws_iam_instance_profile.ec_inst_prf.id
@@ -162,8 +161,16 @@ resource "aws_instance" "web_server" {
 
 resource "aws_network_interface" "web_server_subnet_interface" {
     subnet_id   = "${aws_subnet.web_srv_sn_1a.id}"
+    security_groups = ["${aws_security_group.web_srv_sg.id}"]
     private_ips = ["10.0.0.10"]
 }
+
+resource "aws_network_interface_attachment" "web_server_interface" {
+    instance_id             = "${aws_instance.web_server.id}"
+    network_interface_id    = "${aws_network_interface.web_server_subnet_interface.id}"
+    device_index            = 1
+}
+
 
 resource "aws_eip" "web_server_ip" {
   network_interface         = "${aws_network_interface.web_server_subnet_interface.id}"
@@ -174,6 +181,7 @@ resource "aws_eip" "web_server_ip" {
 resource "aws_alb" "web_server_lb" {
     name                = "web-server-lb"
     subnets             = ["${aws_subnet.web_srv_sn_1a.id}","${aws_subnet.web_srv_sn_1b.id}"]
+    security_groups    = ["${aws_security_group.web_srv_sg.id}"]
     load_balancer_type  = "application"
 }
 
@@ -196,5 +204,9 @@ resource "aws_alb_listener" "web_srv_lb_listener" {
         type                = "forward"
         target_group_arn    = "${aws_alb_target_group.web_srv_tg.arn}"
     }
+}
+
+output "web_server_lb_name" {
+  name = "${aws_alb.web_server_lb.name}"
 }
 
