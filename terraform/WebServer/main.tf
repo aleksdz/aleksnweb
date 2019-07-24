@@ -147,12 +147,15 @@ resource "aws_iam_policy" "av_role_plc" {
 resource "aws_instance" "web_server" {
     ami                         = "ami-01b282b0f06ba5fd2"
     instance_type               = "t2.micro"
-    subnet_id                   = aws_subnet.web_srv_sn_1a.id
     key_name                    = "home-key"
     user_data                   = "${file("instance_bootstrap.sh")}"
-    vpc_security_group_ids      = [aws_security_group.web_srv_sg.id]
     iam_instance_profile        = aws_iam_instance_profile.ec_inst_prf.id
     availability_zone           = "eu-west-1a"
+
+    network_interface {
+        device_index            = 0
+        network_interface_id    = "${aws_network_interface.web_server_subnet_interface.id}"
+    }
 
     tags = {
         Name = "web-srv-inst"
@@ -163,12 +166,6 @@ resource "aws_network_interface" "web_server_subnet_interface" {
     subnet_id   = "${aws_subnet.web_srv_sn_1a.id}"
     security_groups = ["${aws_security_group.web_srv_sg.id}"]
     private_ips = ["10.0.0.10"]
-}
-
-resource "aws_network_interface_attachment" "web_server_interface" {
-    instance_id             = "${aws_instance.web_server.id}"
-    network_interface_id    = "${aws_network_interface.web_server_subnet_interface.id}"
-    device_index            = 1
 }
 
 
@@ -207,6 +204,6 @@ resource "aws_alb_listener" "web_srv_lb_listener" {
 }
 
 output "web_server_lb_name" {
-  name = "${aws_alb.web_server_lb.name}"
+  value = "${aws_alb.web_server_lb.name}"
 }
 
