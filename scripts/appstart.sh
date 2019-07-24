@@ -1,2 +1,2 @@
 #!/bin/bash
-scripts/start_server.sh > >(logger -p user.info) 2> >(logger -p user.warn)
+scripts/start_server.sh > /dev/null 2> /dev/null < /dev/null &
