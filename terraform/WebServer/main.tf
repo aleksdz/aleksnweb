@@ -147,7 +147,7 @@ resource "aws_iam_policy" "av_role_plc" {
 resource "aws_instance" "web_server" {
     ami                         = "ami-01b282b0f06ba5fd2"
     instance_type               = "t2.micro"
-    key_name                    = "home-key"
+    key_name                    = "aws-key-mac"
     user_data                   = "${file("instance_bootstrap.sh")}"
     iam_instance_profile        = aws_iam_instance_profile.ec_inst_prf.id
     availability_zone           = "eu-west-1a"
