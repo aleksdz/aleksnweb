@@ -1,2 +1,2 @@
 #!/bin/bash
-dotnet run --project /var/aleksnweb/WebServer/WebServer.fsproj &
+nohup dotnet run --project /var/aleksnweb/WebServer/WebServer.fsproj &
