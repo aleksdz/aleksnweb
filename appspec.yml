@@ -5,10 +5,10 @@ files:
     destination: /var/aleksnweb/
 hooks:
   ApplicationStart:
-    - location: scripts/start_server.sh
+    - location: scripts/appstart.sh
       timeout: 30
       runas: root
   ApplicationStop:
-    - location: scripts/stop_server.sh
+    - location: scripts/appstop.sh
       timeout: 30
       runas: root
