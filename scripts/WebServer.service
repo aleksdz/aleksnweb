@@ -8,7 +8,7 @@ Type=simple
 Restart=always
 RestartSec=1
 User=admin
-ExecStart=dotnet /var/aleksnweb/WebServer/WebServer.fsproj
+ExecStart=/usr/bin/dotnet /var/aleksnweb/WebServer/WebServer.fsproj
 
 [Install]
 WantedBy=multi-user.target
