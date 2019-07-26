@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Service configuration file
-cp WebServer.service /etc/systemd/system/WebServer.service
+cp scripts/WebServer.service /etc/systemd/system/WebServer.service
 
 # Open internet ports for WebServer connectivity
 iptables -A INPUT -p tcp --dport 80 --jump ACCEPT
