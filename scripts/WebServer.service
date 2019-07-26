@@ -1,0 +1,14 @@
+[Unit]
+Description=WebServer Service
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=admin
+ExecStart=dotnet /var/aleksnweb/WebServer/WebServer.fsproj
+
+[Install]
+WantedBy=multi-user.target
