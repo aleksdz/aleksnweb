@@ -24,8 +24,4 @@ chmod +x ./install
 sudo ./install auto
 sudo service codedeploy-agent start
 
-# Open Internet Ports for External Connectivity
-iptables -A INPUT -p tcp --dport 80 --jump ACCEPT
-iptables -A INPUT -p tcp --dport 443 --jump ACCEPT
-iptables-save
 
