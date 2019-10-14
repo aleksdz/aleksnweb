@@ -9,7 +9,7 @@
             [
                 Filters.GET >=> choose
                     [
-                        Filters.path "/" >=> (Redirection.redirect "https://www.linkedin.com/in/aleks-nazarenko-a09089146")
+                        Filters.path "/" >=> (Redirection.redirect "https://github.com/zaersx/")
                         Files.browseHome
                         RequestErrors.NOT_FOUND "Page not found." 
                     ]
